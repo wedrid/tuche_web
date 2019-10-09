@@ -22,4 +22,8 @@ urlpatterns = [
     path('register/', user_views.register, name='register'),
     path('map/', include('map.urls')), #se siamo in sito.com/map allora includi map/urls, in cui sono mappate tutte le altre cose
     path('', include('map.urls')), #se siamo in sito.com/map allora includi map/urls, in cui sono mappate tutte le altre cose
+   
+    #URL per REST
+    path('api/map/', include('map.api.urls', 'map_api')),
+
 ]
