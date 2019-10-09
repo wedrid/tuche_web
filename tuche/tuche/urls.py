@@ -25,5 +25,6 @@ urlpatterns = [
    
     #URL per REST
     path('api/map/', include('map.api.urls', 'map_api')),
+    path('api/users/', include('users.api.urls', 'users_api')),  #TO BE CHECKED
 
 ]
