@@ -43,6 +43,17 @@
           center: [ 11.2558, 43.7696 ],
           zoom: 12.5,
         });
+
+        {% for row in rows %}
+            var str = '<p>Latitudine: {{row.lat}} </p><p> Longitudine: {{row.lon}} </p><p> Data: {{ row.time|date:"F d, Y" }} </p><p> Author: {{row.user}}</p>'
+            var marker = new mapboxgl.Marker().setLngLat([{{row.lon}}, {{row.lat}}]).addTo(map)
+            var popup = new mapboxgl.Popup().setHTML(str)
+            marker.setPopup(popup)  
+        {% endfor %}
+
+        
+
+
       </script>
 
 
