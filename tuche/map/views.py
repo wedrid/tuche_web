@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Report
+from django.db.models.expressions import F
+from django.db.models.functions.math import Sqrt, Power
 
 # Create your views here.
 
@@ -27,6 +29,8 @@ alerts = [
 
 def home(request):
     # context viene passata 
+    rows = Report.objects.all()
+    
     context = {
         'rows' : Report.objects.all()
     }

@@ -14,6 +14,7 @@ class Report(models.Model):
     intensity_x = models.FloatField(blank=True, null=True)
     intensity_y = models.FloatField(blank=True, null=True)
     intensity_z = models.FloatField(blank=True, null=True)
+    intensity_module = models.FloatField(blank=True, null=True)
 
     def __str__(self):
         return "Report di: " + str(self.user) + " in " + str(self.lat) + ", " + str(self.lon)

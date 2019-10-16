@@ -11,10 +11,14 @@
         <table class="table table-striped">
                 <thead class="thead-dark">
                     <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Lat</th>
-                        <th scope="col">Lon</th>
-                        <th scope="col">Date</th>
+                        <th scope="col">Autore</th>
+                        <th scope="col">Latitudine</th>
+                        <th scope="col">Longitudine</th>
+                        <th scope="col">Data</th>
+                        <th scope="col">Acc(x)</th>
+                        <th scope="col">Acc(y)</th>
+                        <th scope="col">Acc(z)</th>
+                        <th scope="col">Acc. module</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -24,7 +28,10 @@
                                 <td>{{ row.lat }}</td>
                                 <td>{{ row.lon }}</td>
                                 <td>{{ row.time|date:"F d, Y" }}</td>
-
+                                <td>{{ row.intensity_x }}</td>
+                                <td>{{ row.intensity_y }}</td>
+                                <td>{{ row.intensity_z }}</td>
+                                <td>{{ row.intensity_module }}</td>
                             </tr>
                         {% endfor %}
 
