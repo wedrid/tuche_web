@@ -1,0 +1,50 @@
+{% block content %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Tuche - mappa</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                    <div class="" id='map' style='height: 100vh; width:100vw;'></div>
+            </div>
+        </div>
+
+        <script src='https://api.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.css' rel='stylesheet' />
+      <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZWRyaWQiLCJhIjoiY2swd2c4M2lzMDA2cDNncGlxd29jc3QydCJ9.Qxj5iEFCVnQ4ggPK9I0STA';
+        var map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/mapbox/streets-v11',
+          center: [ 11.2558, 43.7696 ],
+          zoom: 12.5,
+        });
+
+        {% for row in rows %}
+            var str = '<p>Latitudine: {{row.lat}} </p><p> Longitudine: {{row.lon}} </p><p> Data: {{ row.time|date:"F d, Y" }} </p><p> Author: {{row.user}}</p>'
+            var marker = new mapboxgl.Marker().setLngLat([{{row.lon}}, {{row.lat}}]).addTo(map)
+            var popup = new mapboxgl.Popup().setHTML(str)
+            marker.setPopup(popup)  
+        {% endfor %}
+
+        
+
+
+      </script>
+
+    
+    </body>
+
+
+
+</html>
+
+{% endblock content %}

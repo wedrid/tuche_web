@@ -36,3 +36,13 @@ def home(request):
     }
 
     return render(request, 'map/home.html', context)
+
+def maponly(request):
+
+    rows = Report.objects.all()
+    
+    context = {
+        'rows' : Report.objects.all()
+    }
+
+    return render(request, 'map/maponly.html', context);
