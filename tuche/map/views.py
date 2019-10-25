@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .models import Report
 from django.db.models.expressions import F
 from django.db.models.functions.math import Sqrt, Power
+from django.core.paginator import Paginator
 
 # Create your views here.
 
@@ -30,9 +31,17 @@ alerts = [
 def home(request):
     # context viene passata 
     rows = Report.objects.all()
-    
+
+    paginator = Paginator(Report.objects.all(), 8)
+
+    page = request.GET.get('page')
+
+    righe = paginator.get_page(page)
+
+
     context = {
-        'rows' : Report.objects.all()
+        'rows' : Report.objects.all(),
+        'righe': righe
     }
 
     return render(request, 'map/home.html', context)

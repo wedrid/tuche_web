@@ -22,7 +22,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                        {% for row in rows %}
+                        {% for row in righe %}
                             <tr>
                                 <th scope="row">{{ row.user }}</th>
                                 <td>{{ row.lat }}</td>
@@ -34,6 +34,8 @@
                                 <td>{{ row.intensity_module }}</td>
                             </tr>
                         {% endfor %}
+                        
+                        
 
                 </tbody>
         </table>
