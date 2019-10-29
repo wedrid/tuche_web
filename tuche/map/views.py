@@ -4,33 +4,13 @@ from .models import Report
 from django.db.models.expressions import F
 from django.db.models.functions.math import Sqrt, Power
 from django.core.paginator import Paginator
+from django.core import serializers
 
 # Create your views here.
 
-alerts = [
-    {
-        'autore': 1,
-        'lat': 42,
-        'lon': 11,
-        'data': 'Lunedì'
-    },
-    {
-        'autore': 2,
-        'lat': 42.1,
-        'lon': 11.2,
-        'data': 'Martedì'
-    },
-    {
-        'autore': 3,
-        'lat': 42.3,
-        'lon': 11.3,
-        'data': 'Mercoledì'
-    }
-]
-
-def home(request):
+def registro(request):
     # context viene passata 
-    rows = Report.objects.all()
+    # rows = Report.objects.all()
 
     paginator = Paginator(Report.objects.all(), 8)
 
@@ -42,6 +22,29 @@ def home(request):
     context = {
         'rows' : Report.objects.all(),
         'righe': righe
+    }
+
+    return render(request, 'map/logs.html', context)
+
+
+def home(request):
+    # context viene passata 
+    # rows = Report.objects.all()
+
+    paginator = Paginator(Report.objects.all(), 8)
+
+    page = request.GET.get('page')
+
+    righe = paginator.get_page(page)
+    
+    tmp = list(Report.objects.all())
+
+    rowsjs = serializers.serialize("json", Report.objects.all())
+
+    context = {
+        'rows' : Report.objects.all(),
+        'righe': righe,
+        'rows_js': rowsjs,
     }
 
     return render(request, 'map/home.html', context)
