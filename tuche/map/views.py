@@ -50,11 +50,23 @@ def home(request):
     return render(request, 'map/home.html', context)
 
 def maponly(request):
+   # context viene passata 
+    # rows = Report.objects.all()
 
-    rows = Report.objects.all()
+    paginator = Paginator(Report.objects.all(), 8)
+
+    page = request.GET.get('page')
+
+    righe = paginator.get_page(page)
     
+    tmp = list(Report.objects.all())
+
+    rowsjs = serializers.serialize("json", Report.objects.all())
+
     context = {
-        'rows' : Report.objects.all()
+        'rows' : Report.objects.all(),
+        'righe': righe,
+        'rows_js': rowsjs,
     }
 
-    return render(request, 'map/maponly.html', context);
+    return render(request, 'map/maponly.html', context)

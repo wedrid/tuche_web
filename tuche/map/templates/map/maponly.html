@@ -3,6 +3,9 @@
 <html>
     <head>
         <title>Tuche - mappa</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
         <style>
             * {
                 margin: 0;
@@ -19,6 +22,7 @@
 
         <script src='https://api.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.css' rel='stylesheet' />
+      
       <script>
         mapboxgl.accessToken = 'pk.eyJ1IjoiZWRyaWQiLCJhIjoiY2swd2c4M2lzMDA2cDNncGlxd29jc3QydCJ9.Qxj5iEFCVnQ4ggPK9I0STA';
         var map = new mapboxgl.Map({
@@ -27,14 +31,54 @@
           center: [ 11.2558, 43.7696 ],
           zoom: 12.5,
         });
+        
+        
+        var reports = {{ rows_js|safe }} 
+        //var temp = reports[1].fields.lat
+        //alert(temp)
+        //alert(reports[1].lat)
+        var light_green = "#90ee90"
+        var green = "#00a634"
+        var yellow = "#ffff00"
+        var orange = "#ff7512"
+        var red = "#ff7512"
+        var black = "#2e1f21"
+        var allMarkers = []
+        var vehicle = "Default"
+        for(var row of reports){
+            if(row.fields.vehicle_type == 0){
+                vehicle = "Bicicletta"
+            } else if(row.fields.vehicle_type == 1){
+                vehicle = "Macchina"
+            }
+            var str = '<h6>Latitudine:'+ row.fields.lat + '</h6><h6> Longitudine: '+ row.fields.lon+'</h6><h6> Data: '+row.fields.time+'</h6><h6>Modulo: '+row.fields.intensity_module+'</h6><h6>Veicolo: '+ vehicle +'</h6>'
+            color = "#000000"
+            if(row.fields.intensity_module < 16){
+                color = light_green;
+            } else if(row.fields.intensity_module >= 16 && row.fields.intensity_module < 25){
+                color = green;
+            } else if(row.fields.intensity_module >= 25 && row.fields.intensity_module < 35){
+                color = yellow;
+            } else if(row.fields.intensity_module >= 25 && row.fields.intensity_module < 35){
+                color = orange;
+            } else if(row.fields.intensity_module >= 35 && row.fields.intensity_module < 45){
+                color = red;
+            } else {
+                color = black;
+            }
 
-        {% for row in rows %}
-            var str = '<p>Latitudine: {{row.lat}} </p><p> Longitudine: {{row.lon}} </p><p> Data: {{ row.time|date:"F d, Y" }} </p><p> Author: {{row.user}}</p>'
-            var marker = new mapboxgl.Marker().setLngLat([{{row.lon}}, {{row.lat}}]).addTo(map)
+            var marker = new mapboxgl.Marker(
+                {
+                    'color': color,
+                },
+            ).setLngLat([row.fields.lon, row.fields.lat])
+            marker.addTo(map)
+            
             var popup = new mapboxgl.Popup().setHTML(str)
             marker.setPopup(popup)  
-        {% endfor %}
-
+            allMarkers.push(marker)
+        
+        }
         
 
 

@@ -1,7 +1,7 @@
 {% extends "map/base.html" %}
 {% block content %}
 
-    <div class="container mt-5" ">
+    <div class="container mt-5">
         <table class="table table-striped">
                 <thead class="thead-dark">
                     <tr>
@@ -13,6 +13,7 @@
                         <th scope="col">Acc(y)</th>
                         <th scope="col">Acc(z)</th>
                         <th scope="col">Acc. module</th>
+                        <th scope="col">Veicolo*</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -26,6 +27,7 @@
                                 <td>{{ row.intensity_y }}</td>
                                 <td>{{ row.intensity_z }}</td>
                                 <td>{{ row.intensity_module }}</td>
+                                <td>{{ row.vehicle_type }}</td>
                             </tr>
                         {% endfor %}
                         

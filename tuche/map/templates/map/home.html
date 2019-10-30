@@ -17,14 +17,14 @@
                 <h4 class="text-secondary">Veicolo: </h4>
                 <div class="pl-4 mb-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">
+                        <input class="form-check-input" type="checkbox" value="" id="bicicheck">
+                        <label class="form-check-label" for="bicicheck">
                         Bicicletta
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-                        <label class="form-check-label" for="defaultCheck2">
+                        <input class="form-check-input" type="checkbox" value="" id="macchinacheck">
+                        <label class="form-check-label" for="macchinacheck">
                         Macchina
                         </label>
                     </div>
@@ -43,7 +43,7 @@
                     <div class="form-group">
                         <label for="example-number-input" class="col-form-label">Modulo Massimo: </label>
                         <div class="">
-                            <input class="form-control" type="number" value="100" id="modmax">
+                            <input class="form-control" type="number" value="1000" id="modmax">
                         </div>
                     </div>
                 </div>
@@ -58,6 +58,8 @@
 
     <script src='https://api.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.css' rel='stylesheet' />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+
       <script>
         mapboxgl.accessToken = 'pk.eyJ1IjoiZWRyaWQiLCJhIjoiY2swd2c4M2lzMDA2cDNncGlxd29jc3QydCJ9.Qxj5iEFCVnQ4ggPK9I0STA';
         var map = new mapboxgl.Map({
@@ -66,7 +68,8 @@
           center: [ 11.2558, 43.7696 ],
           zoom: 12.5,
         });
-
+        document.getElementById("macchinacheck").checked = true
+        document.getElementById("bicicheck").checked = true
         var reports = {{ rows_js|safe }} 
         //var temp = reports[1].fields.lat
         //alert(temp)
@@ -76,9 +79,16 @@
         var yellow = "#ffff00"
         var orange = "#ff7512"
         var red = "#ff7512"
+        var black = "#2e1f21"
         var allMarkers = []
+        var vehicle = "Default"
         for(var row of reports){
-            var str = '<p>Latitudine:'+ row.fields.lat + '</p><p> Longitudine: '+ row.fields.lon+'</p><p> Data: '+row.fields.time+'</p><p>Modulo '+row.fields.intensity_module+'</p>'
+            if(row.fields.vehicle_type == 0){
+                vehicle = "Bicicletta"
+            } else if(row.fields.vehicle_type == 1){
+                vehicle = "Macchina"
+            }
+            var str = '<h6>Latitudine:'+ row.fields.lat + '</h6><h6> Longitudine: '+ row.fields.lon+'</h6><h6> Data: '+row.fields.time+'</h6><h6>Modulo: '+row.fields.intensity_module+'</h6><h6>Veicolo: '+ vehicle +'</h6>'
             color = "#000000"
             if(row.fields.intensity_module < 16){
                 color = light_green;
@@ -106,6 +116,8 @@
             allMarkers.push(marker)
         
         }
+        //FIXME/NOTA PER ME: il blocco sopra è ripetuto, ma lo mantengo, nel caso ci fossero campi nulli; altrimenti potrebbe essere eliminato chiamando semplicemente la funzione filter
+        
         
     function filter(){
         for(marker of allMarkers){
@@ -116,11 +128,24 @@
         min = document.getElementById('modmin').value
         max = document.getElementById('modmax').value
 
-        alert(min + ", " + max)
+        //alert(min + ", " + max)
 
+        var bici = document.getElementById('bicicheck').checked
+        var macchina = document.getElementById('macchinacheck').checked
+        var count = 0
         for(var row of reports){
+
+            let data = row.fields.time
+            var dateFormatted = (moment(data)).format('YYYY-MM-DD')
+
+
+            if(row.fields.vehicle_type == 0){
+                vehicle = "Bicicletta"
+            } else if(row.fields.vehicle_type == 1){
+                vehicle = "Macchina"
+            }
             if(row.fields.intensity_module > min && row.fields.intensity_module < max){
-                var str = '<p>Latitudine:'+ row.fields.lat + '</p><p> Longitudine: '+ row.fields.lon+'</p><p> Data: '+row.fields.time+'</p><p>Modulo: '+row.fields.intensity_module+'</p>'
+                var str = '<h6>Latitudine:'+ row.fields.lat + '</h6><h6> Longitudine: '+ row.fields.lon+'</h6><h6> Data: '+ dateFormatted +'</h6><h6>Modulo: '+row.fields.intensity_module+'</h6><h6>Veicolo: '+ vehicle +'</h6>'
                 color = "#000000"
                 if(row.fields.intensity_module < 16){
                     color = light_green;
@@ -135,20 +160,42 @@
                 } else {
                     color = black;
                 }
-
-                var marker = new mapboxgl.Marker(
+                
+                if(bici && row.fields.vehicle_type == 0){
+                    count+=1
+                    var marker = new mapboxgl.Marker(
                     {
                         'color': color,
                     },
-                ).setLngLat([row.fields.lon, row.fields.lat])
-                marker.addTo(map)
+                    ).setLngLat([row.fields.lon, row.fields.lat])
+                    marker.addTo(map)
+                    
+                    var popup = new mapboxgl.Popup().setHTML(str)
+                    marker.setPopup(popup)  
+                    allMarkers.push(marker)
+
+                }
+                if(macchina && row.fields.vehicle_type == 1){
+                    count+=1
+                    var marker = new mapboxgl.Marker(
+                    {
+                        'color': color,
+                    },
+                    ).setLngLat([row.fields.lon, row.fields.lat])
+                    marker.addTo(map)
+                    
+                    var popup = new mapboxgl.Popup().setHTML(str)
+                    marker.setPopup(popup)  
+                    allMarkers.push(marker)
+
+
+                }
+
                 
-                var popup = new mapboxgl.Popup().setHTML(str)
-                marker.setPopup(popup)  
-                allMarkers.push(marker)
             }
             //else, do nothing
         }
+
 
     }
 
