@@ -83,12 +83,15 @@
         var allMarkers = []
         var vehicle = "Default"
         for(var row of reports){
+            let data = row.fields.time
+            var dateFormatted = (moment(data)).format('YYYY-MM-DD hh:mm')
+
             if(row.fields.vehicle_type == 0){
                 vehicle = "Bicicletta"
             } else if(row.fields.vehicle_type == 1){
                 vehicle = "Macchina"
             }
-            var str = '<h6>Latitudine:'+ row.fields.lat + '</h6><h6> Longitudine: '+ row.fields.lon+'</h6><h6> Data: '+row.fields.time+'</h6><h6>Modulo: '+row.fields.intensity_module+'</h6><h6>Veicolo: '+ vehicle +'</h6>'
+            var str = '<h6>Latitudine:'+ row.fields.lat + '</h6><h6> Longitudine: '+ row.fields.lon+'</h6><h6> Data: '+ dateFormatted +'</h6><h6>Modulo: '+row.fields.intensity_module+'</h6><h6>Veicolo: '+ vehicle +'</h6>'
             color = "#000000"
             if(row.fields.intensity_module < 16){
                 color = light_green;
@@ -136,7 +139,7 @@
         for(var row of reports){
 
             let data = row.fields.time
-            var dateFormatted = (moment(data)).format('YYYY-MM-DD')
+            var dateFormatted = (moment(data)).format('YYYY-MM-DD hh:mm')
 
 
             if(row.fields.vehicle_type == 0){
